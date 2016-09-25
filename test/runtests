@@ -1,0 +1,29 @@
+#!/bin/bash
+# -------------------------------------------------------------------
+# runtests
+#
+# Copyright (c) 2004 Simon Southwell. All rights reserved
+#
+# -------------------------------------------------------------------
+
+#
+
+testlist="sethi and or xor shift add sub \
+          ld st swap ldstub mul div bicc \
+          rd_wr call jmpl ticc mulscc \
+          save_rest tadd tsub"
+
+for testname in $testlist
+do
+    if [ "$1" != "nc" ] 
+    then
+        compile $testname nowarn
+    fi
+
+    if ../sparc_iss -f ${testname}.aout
+    then
+        echo "Test '$testname' passed."
+    else
+        echo "Test $testname failed! ***"
+    fi
+done

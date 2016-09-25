@@ -1,0 +1,53 @@
+#!/bin/sh
+
+if [ "$1" = "" ]
+then
+    echo "Usage: compile <testfile>"
+    exit
+fi
+
+if [ "$2" = "nowarn" ]
+then
+    no_warn="2> /dev/null"
+else
+    no_warn=""
+fi
+
+name=$1
+
+if [ "$OSTYPE" = "cygwin" ]
+then
+  sparc-elf-cpp trap_table.s | sparc-elf-as.exe -xarch=v8 -o trap_table.o
+  sparc-elf-cpp ${name}.s | sparc-elf-as.exe -xarch=v8 -W -o ${name}.o
+  sparc-elf-gcc -c libsparc.c -o libsparc.o
+  sparc-elf-ld -A v8 -e __trap_table -nostdlib \
+               -Map ${name}.map \
+               --noinhibit-exec \
+               -Ttext 0x00000000 -Tdata 0x00040000 -Tbss 0x00048000 \
+	       -o ${name}.aout trap_table.o ${name}.o libsparc.o >& /dev/null
+  
+else
+  if [ "$OSTYPE" = "solaris" ]
+  then
+
+    /usr/ccs/bin/as -P trap_table.s 
+    eval "/usr/ccs/bin/as -P ${name}.s -o ${name}.o $no_warn"
+    gcc -I. -c -O2 -mcpu=v8 libsparc.c -o libsparc.o
+    gcc -nostdlib -mpcu=v8 -static -e __trap_table \
+        -Xlinker -M -Xlinker ./mapfile \
+        -o ${name}.aout trap_table.o ${name}.o libsparc.o
+
+    /usr/ccs/bin/dis ${name}.aout > ${name}.dis
+
+  else
+
+    cpp trap_table.s | /usr/local/sparc-v8-solaris/bin/as -o trap_table.o
+    cpp ${name}.s | /usr/local/sparc-v8-solaris/bin/as -o ${name}.o
+
+    /usr/local/sparc-v8-solaris/bin/ld -nostdlib -Ttext 0x00000000 -Tdata 0x00040000 \
+         -o ${name}.aout trap_table.o ${name}.o libsparc.o
+
+    sid -f ${name}.aout > ${name}.sid
+  fi
+fi
+

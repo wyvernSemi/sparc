@@ -1,0 +1,2275 @@
+
+<HTML><HEAD><META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<TITLE>Wyvern Semiconducters - IP Resources</TITLE>
+<META name="keywords" content="IP, Intellectual Property, ASIC, FPG, Semiconductors, Digital, Design, Data Compression, JPEG, verification, test, HDL">
+<META name="description" content="">
+
+<STYLE type="text/css">
+<!--
+td {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+.content {
+	padding-top: 20px;
+	padding-right: 20px;
+	padding-left: 20px;
+	background-image: url(../wyvernsemi_files/e030_05.png);
+	background-repeat: repeat-x;
+	background-position: top;
+    font-size:11pt;
+}
+.menuleft {
+	height: 35px;
+	padding-right: 15px;
+	padding-left: 40px;
+	vertical-align: middle;
+	font-weight: bold;
+	color: #000000;
+	background-image: url(../wyvernsemi_files/e030_07.png);
+	background-repeat: no-repeat;
+	background-position: left;
+}
+a:link, a:visited {
+	color: #FF0000;
+	text-decoration: underline;
+}
+a:hover {
+	color: #000099;
+	text-decoration: none;
+}
+.menuleft a:link, .menuleft a:visited {
+	color: #000000;
+	text-decoration: none;
+}
+.menuleft a:hover {
+	color: #000000;
+	text-decoration: underline;
+}
+.footer, .footer a:link, .footer a:visited {
+	color: #FFFFFF;
+	padding-bottom: 25px;
+}
+.newsbar {
+	color: #000000;
+	font-weight: bold;
+	padding-left: 40px;
+}
+.logo {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #000000;
+}
+.leftcontent {
+	padding-top: 10px;
+	padding-right: 10px;
+	padding-bottom: 25px;
+	padding-left: 40px;
+}
+.style1 {font-size: 16px}
+.date {
+	color: #FFFFFF;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+.logo1 {	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+    p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";}
+
+-->
+</STYLE>
+<LINK href="../wyvernsemi_files/cms_style.css" rel="stylesheet" type="text/css">
+<!--DHTML menu-->
+
+
+ 
+</HEAD>
+<!--- <BODY bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> --->
+<body vlink="#0000ff" alink="#0000ff" link="#0000ff" background="./images/wyvernbg.jpg"
+leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<TABLE style="height: 100%;" border="0" cellspacing="0" cellpadding="0" width="100%" >
+<TBODY>
+<TR>
+<TD height="100%" valign="top">
+
+<TD class="content" valign="top">
+
+<!--------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------->
+
+<!-- content Here -->
+
+<center>
+<h1>A Sparc v8 Instruction Set Simulator (sparc_iss)</h1>
+<font face="Arial" size="2">by
+Simon Southwell
+<BR>
+11th July 2010 </font>
+<BR>
+&nbsp;
+</center>
+<hr>
+<center>
+<img src="images/UltraSparc.png" width=150>
+</center>
+<hr>
+<h2>Contents</h2>
+<ul style="font-size:8pt">
+<li><a href="#intro">Introduction</a>
+  <ul>
+  <li><a href="#format">SPARC Instruction Set Format</a>
+  </ul>
+<li><a href="#fundamental">Architecture Fundamentals</a>
+  <ul>
+  <li><a href="#table">Instruction Table Organisation</a>
+  <li><a href="#instdecstruct">Instruction Decode Structure</a>
+  <li><a href="#funcdec">Instruction Function Declarations</a>
+  </ul>
+<li><a href="#toplevel">Top Level Structure</a>
+<li><a href="#fetch">Instruction Fetch</a>
+<li><a href="#decode">Decode and Register Read</a>
+<li><a href="#execute">Execute</a>
+  <ul>
+  <li><a href="#arith">Arithmetic Example</a>
+  <li><a href="#memaccess">Memory Access Example</a>
+  </ul>
+<li><a href="#writeback">Write Back</a>
+<li><a href="#trap">Traps</a>
+<li><a href="#other">Other Functions</a>
+<li><a href="#global">Global State</a>
+  <ul>
+  <li><a href="#procstate">Processor State</a>
+  <li><a href="#userstate">User Control and Miscellaneous State</a>
+  </ul>
+<li><a href="#appendices">Appendixes</a>
+  <ul>
+  <li><a href="#limit">Model Limitations</a>
+  <li><a href="#download">Download</a>
+  <li><a href="#links">Useful Links</a>
+  </ul>
+</ul>
+
+
+<a name="intro"></a>
+<h3>Introduction</h3>
+
+<p>
+On this page you can find links to obtain an instruction set simulator (ISS) for 
+the Sparc processor version 8 instructions. Executables exist for Linux
+and windows, but source code is also provided with a makefile for Linux, and 
+<tt>.dsw</tt> and <tt>.dsp</tt> files for windows Visual C++ 6.0 environments, which can be
+used to recompile on a local machine.
+</p>
+<p>
+The usage messge of the model is as follows:
+</p>
+
+<pre style="font-family:Courier; font-size:10pt; color:#603000";>
+  Usage: sparc_iss [-d] [-n &lt;num instructions&gt;] [-b &lt;breakpoint addr&gt;] [-f &lt;filename&gt;] [-o &lt;filename&gt;] 
+
+      -d Turn on Verbose display
+      -n Specify number of instructions to run (default: run until UNIMP)
+      -b Specify address for breakpoint
+      -f Specify executable ELF file (default main.out)
+      -o Output file for Verbose data (default stdout)
+</pre>
+
+<p>
+The model reads an executable ELF format file and starts executing. Simple
+break control is provided by specifying a number of instructions to run or
+an absolute address to break on, and verbose output can be turned on to follow 
+execution.
+</p>
+
+<p>
+This SPARC instruction set simulator was originally coded to capture some of the
+experience and knowledge gained on a much more complicated, and commercially
+marketed model&mdash;namely the Tricore 2 embedded processor of Infineon. The
+aim was to have a simpler model, that could be easily understood, with the basic
+architecture encapsulated, but minus the somewhat complicated additional requirements
+required of a commercial product, such as an interface to a debug API.
+</p>
+<p>
+The SPARC was chosen partly because I had some previous experience of the processor,
+but also because of its simplicity. Whereas the Tricore 2 processor has over 800
+instructions and 7 addressing modes, the SPARC v8 has just 68 instructions and
+2 addressing modes. This means the code is not obfiscated with complexity which
+would hide the fundamental architecture principles. It was also hoped that the
+model of a SPARC processor might still be useful and of relevance for a little while
+after the publication.
+</p>
+<p>
+The model architecture emphasizes structure, simplicity and maintainability, as
+well as ease of expandability. Speed is not of primary importance, though optimisations
+are made where possible. The orignal Tricore model usage was varied, being used both as
+a verification tool for the development of the processor, but also bundled with
+a debug tool chain, to allow software engineers to have a working demo, both prior to
+and after delivery of the Tricore hardware. The demonstration model was for evaluating
+the instructions rather than running software at high speed.
+</p>
+<p>
+The model source code is released under the terms of the GNU general public
+license v3 so that you may access and modify the code for yourselves. Each
+instruction has been tested to some degree, but not rigorously so, and the
+model comes with absolutley no guarantees whatsoever. Further testing is 
+ongoing, and subject to time available against other projects.
+</p>
+
+  <a name="format"></a>
+  <h3>SPARC Instruction Set Format</h3>
+
+<p>
+This document is not meant to be a tutorial on the SPARC v8 instruction set, and the
+<a href="#links">links</a> provided will point you in the right direction to study this further. However,
+the instruction set does map on to the architecture chosen, and so a brief look
+at the instruction format is appropriate at this point. Below is shown the basic
+instruction format for the SPARC v8 processor.
+</p>
+
+
+<center>
+<table cellpadding="0" cellspacing="0">
+<tr height=30>
+  <td colspan=3>Format 1 (op = 1): CALL</td>
+</tr>
+<tr>
+  <td width=800 colspan=3>
+  <table border="1" cellpadding="0" cellspacing="0"><tr>
+  <td width=50  align=center>op</td>
+  <td width=750 align=center>disp30</td>
+  </tr></table>
+  </td>
+</tr>
+<tr>
+<td width=50 align=left>31</td>
+<td width=50 align=left>29</td>
+<td width=700 align=right>0</td>
+</tr>
+</table>
+
+<br>
+
+<table cellpadding="0" cellspacing="0">
+<tr height=30>
+  <td colspan=6>Format 2 (op = 0): SETHI and Branches (Bicc, FBfcc, CBccc)</td>
+</tr>
+<tr>
+  <td width=800 colspan=6>
+  <table border="1" cellpadding="0" cellspacing="0"><tr>
+  <td width=50  align=center>op</td>
+  <td width=103 align=center>rd</td>
+  <td width=50  align=center>op2</td>
+  <td width=600 align=center>imm22</td>
+  </tr></table>
+  </td>
+</tr>
+<tr>
+  <td width=800 colspan=6>
+  <table border="1" cellpadding="0" cellspacing="0"><tr>
+  <td width=51  align=center>op</td>
+  <td width=35 align=center>a</td>
+  <td width=65 align=center>cond</td>
+  <td width=50  align=center>op2</td>
+  <td width=600  align=center>disp22</td>
+  </tr></table>
+  </td>
+</tr>
+<tr>
+<td width=50 align=left>31</td>
+<td width=40 align=left>29</td>
+<td width=70 align=left>28</td>
+<td width=50 align=left>24</td>
+<td width=50 align=left>21</td>
+<td width=540 align=right>0</td>
+</tr>
+</table>
+
+<br>
+
+<table cellpadding="0" cellspacing="0">
+<tr height=30>
+  <td colspan=6>Format 3 (op = 2 or 3): Remaining instructions</td>
+</tr>
+<tr>
+  <td width=800 colspan=8>
+  <table border="1" cellpadding="0" cellspacing="0"><tr>
+  <td width=50  align=center>op</td>
+  <td width=100 align=center>rd</td>
+  <td width=101  align=center>op3</td>
+  <td width=100 align=center>rs1</td>
+  <td width=50 align=center>i=0</td>
+  <td width=300  align=center>asi</td>
+  <td width=100 align=center>rs2</td>
+  </tr></table>
+  </td>
+</tr>
+<tr>
+  <td width=800 colspan=8>
+  <table border="1" cellpadding="0" cellspacing="0"><tr>
+  <td width=50  align=center>op</td>
+  <td width=100 align=center>rd</td>
+  <td width=100  align=center>op3</td>
+  <td width=100 align=center>rs1</td>
+  <td width=50 align=center>i=1</td>
+  <td width=400  align=center>simm13</td>
+  </tr></table>
+  </td>
+</tr>
+<tr>
+  <td width=800 colspan=8>
+  <table border="1" cellpadding="0" cellspacing="0"><tr>
+  <td width=50  align=center>op</td>
+  <td width=100 align=center>rd</td>
+  <td width=100  align=center>op3</td>
+  <td width=99  align=center>rs1</td>
+  <td width=350  align=center>opf</td>
+  <td width=100 align=center>rs2</td>
+  </tr></table>
+  </td>
+</tr>
+<tr>
+<td width=50 align=left>31</td>
+<td width=100 align=left>29</td>
+<td width=100 align=left>24</td>
+<td width=100 align=left>18</td>
+<td width=50 align=left>13</td>
+<td width=300 align=left>12</td>
+<td width=50 align=left>4</td>
+<td width=50 align=right>0</td>
+</tr>
+</table>
+</center>
+
+<p>
+As you can see, the SPARC has only three basic formats (with type 2 and 3 lumped
+together, as they are similarly structured). Format 1 has a lone instruction, 
+<tt>CALL</tt>, with most of the bits used for the call's displacement address.
+Format 2 instructions are for the <tt>SETHI</tt> instruction
+(used in constructing 32 bit values in a destination register <tt>rd</tt>) 
+and branches. The <tt>op2</tt> identifies the particular instruction, and for
+branches the <tt>rd</tt> (desitnation register) field of <tt>SETHI</tt>
+is replaced by the <tt>a</tt> (annul) and <tt>cond</tt> (condition) fields.
+</p>
+<p>
+All other instructions are Format 3 instructions, and the <tt>op</tt> can be either
+2 or 3. In general load/store type instructions have an <tt>op</tt> value
+of 3, whilst the rest (mostly logical and arithmetic instructions) have
+a value of 2. Common to all instructions of this type are a destination
+register <tt>rd</tt> and a primary source register <tt>rs1</tt>, as 
+well as an <tt>op3</tt> field to identify the particular instruction. If
+the <tt>i</tt> field is clear (or a floating point/co-procesor instruction)
+a secondary source register is specified (<tt>rs2</tt>). Otherwise and 
+immediate field (<tt>simm13</tt>) is given. The floating point co-processor
+instructions have their own field (<tt>opf</tt>) for specifying the
+co-processor instruction.
+</p>
+<p>
+So that is all there is to the SPARC instruction set. Straight forward, and
+will dictate the first architectural decision to be made.
+</p>
+
+<a name="fundamental"></a>
+<h2>Architecture Fundamentals</h2>
+<p>
+The model will be a straight forward fetch-decode-execute-writeback
+process, with no pipelining of instructions.
+</p>
+<p>
+The approach taken in the SPARC model for decoding is to have a <a href="#table">lookup table</a> for each
+instruction of the three formats. The tables will consist of an array of
+pointers to functions, where the function is that needed to execute the
+operation. The <tt>op</tt> field will be use to select which table to use,
+and (apart from the single instruction format 1 table), the secondary op field 
+(<tt>op2</tt> or <tt>op3</tt> as appropriate) indexes into the array to 
+select the function.  A function may appear in multiple places if it is a generic 
+enough to cover multiple instructions. 
+</p>
+<p>
+Each function has an identical prototype (necessarily) where it has a single
+argument which is a <a href="#funcdec">decode structure</a> containing all the decode information so far.
+Indeed this structure is like a form to be filled in as we go, where initially
+this is just the raw opcode (during fetch), then the decode phase
+looks up the execution function, splits out the individual fields and
+reads any source registers&mdash;placing them all in the structure.
+The execution phase calls the looked up function, passing in the
+structure, and updates the final fields with any writeback data
+values and destinations, flags statuses and program counter updates.
+Finally, the model state is updated with these values during writeback.
+
+</p>
+
+  <a name="table"></a>
+  <h3>Instruction Table Organisation</h3>
+
+<p>
+Below is shown the three lookup tables for the three instruction formats. The declaration
+of these arrays can be found in the <tt>execute.c</tt> source code file.
+</p>
+<p>
+Format 1
+only has 1 instruction, and so is not an array. The other two are for formats 2 and 3.
+Format 2 has a secondary op field (<tt>op2</tt>) of 3 bits, and so the array has
+8 entries. Not all opcode values have a valid instruction, and so an <tt>UNIMP</tt>
+function is placed in these positions. Format 3 has a 7 bit secondary op field (<tt>op3</tt>)
+and so the array is 128 entries.
+</p>
+<!--center>
+<img src="images/table.gif">
+</center-->
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:green'>// Format 1 instruction</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>static</span><span style='font-size:8.0pt;font-family:Consolas'>
+p_func <span style='color:blue'>const</span> format1 = CALL;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:green'>// Format 2 instructions</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>static</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>const</span> p_func format2[8] = {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#BFBFBF'>UNIMP</span>    , <span style='color:#BFBFBF'>UNIMP    </span>,
+BICC     , <span style='color:#BFBFBF'>UNIMP</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+SETHI    , <span style='color:#BFBFBF'>UNIMP    </span>, <span
+style='color:#C00000'>FBFCC    </span>, <span style='color:#C00000'>CBCCC</span>};</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:green'>// Format 3 instructions </span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>static</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>const</span> p_func format3[128] = {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+ADD      , AND      , OR       , XOR      ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+SUB      , ANDN     , ORN      , XNOR     ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+ADDX     , <span style='color:#BFBFBF'>UNIMP    </span>, UMUL     , SMUL     ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+SUBX     , <span style='color:#BFBFBF'>UNIMP    </span>, UDIV     , SDIV     ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+ADDCC    , ANDCC    , ORCC     , XORCC    ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+SUBCC    , ANDNCC   , ORNCC    , XNORCC   ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+ADDXCC   , <span style='color:#BFBFBF'>UNIMP    </span>, UMULCC   , SMULCC   ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+SUBXCC   , <span style='color:#BFBFBF'>UNIMP    </span>, UDIVCC   , SDIVCC   ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+TADDCC   , TSUBCC   , TADDCCTV , TSUBCCTV ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+MULSCC   , SLL      , SRL      , SRA      ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+RDY      , RDPSR    , RDWIM    , RDTBR    ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#BFBFBF'>UNIMP    </span>,
+<span style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#BFBFBF'>UNIMP   
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+WRY      , WRPSR    , WRWIM    , WRTBR    ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#C00000'>FPOP1    </span>, <span style='color:#C00000'>FPOP2    </span>,
+<span style='color:#C00000'>CPOP1    </span>, <span style='color:#C00000'>CPOP2   
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+JMPL     , RETT     , TICC     , FLUSH    ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+SAVE     , RESTORE  , <span style='color:#BFBFBF'>UNIMP    </span>, <span
+style='color:#BFBFBF'>UNIMP    </span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+LD       , LDUB     , LDUH     , LDD      ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+ST       , STB      , STH      , STD      ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#BFBFBF'>UNIMP    </span>, LDSB     , LDSH     , <span
+style='color:#BFBFBF'>UNIMP    </span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#BFBFBF'>UNIMP    </span>, LDSTUB   , <span style='color:#BFBFBF'>UNIMP   
+</span>, SWAP     ,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#C00000'>LDA      </span>, <span style='color:#C00000'>LDUBA    </span>,
+<span style='color:#C00000'>LDUHA    </span>, <span style='color:#C00000'>LDDA    
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#C00000'>STA      </span>, <span style='color:#C00000'>STBA     </span>,
+<span style='color:#C00000'>STHA     </span>, <span style='color:#C00000'>STDA    
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#C00000'>LDSBA    </span>,
+<span style='color:#C00000'>LDSHA    </span>, <span style='color:#BFBFBF'>UNIMP   
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#C00000'>LDSTUBA  </span>,
+<span style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#C00000'>SWAPA   
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#C00000'>LDF      </span>, <span style='color:#C00000'>LDFSR    </span>,
+<span style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#C00000'>LDDF    
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+STF      , <span style='color:#C00000'>STFSR    </span>, <span
+style='color:#C00000'>STDFQ    </span>, <span style='color:#C00000'>STDF     </span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#BFBFBF'>UNIMP    </span>,
+<span style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#BFBFBF'>UNIMP   
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#BFBFBF'>UNIMP    </span>,
+<span style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#BFBFBF'>UNIMP   
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#C00000'>LDC      </span>, <span style='color:#C00000'>LDCSR    </span>,
+<span style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#C00000'>LDDC    
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#C00000'>STC      </span>, <span style='color:#C00000'>STCSR    </span>,
+<span style='color:#C00000'>STDCQ    </span>, <span style='color:#C00000'>STDC    
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#BFBFBF'>UNIMP    </span>,
+<span style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#BFBFBF'>UNIMP   
+</span>,</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#BFBFBF'>UNIMP    </span>,
+<span style='color:#BFBFBF'>UNIMP    </span>, <span style='color:#BFBFBF'>UNIMP
+</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>};</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p>
+In all cases, the array type is <tt>p_func</tt>, which is a pointer to function
+type, whose prototype is defined as:
+</p>
+
+<pre style="font-family:Courier; font-size:10pt; color:#603000";>
+  typedef void (*p_func) (pDecode_t);
+</pre>
+
+<p>
+So all the execution functions return void, and have a single argument
+of type <tt>pDecode_t</tt>, which is a pointer to the "form" to be filled
+in during instruction processing. More of this <a href="#instdecstruct">below</a>.
+The single argument has enough information for each execution function to
+perform the operation (though it may do some further decode itself, if
+it is a generic function, servicing multiple instructions). The execution functions
+will update further fields in the structure, ready for the following steps.
+</p>
+<p>
+Note that the array entries shown in red are not supported by this model. These
+instructions are associated with the floating point unit or co-processor, or 
+are for the alternate space, all of which are optional. In this model, all these
+functions are mapped to <tt>UNIMP</tt>, but the table has labels for these
+instructions to allow ease of adding support for them in the future.
+</p>
+
+  <a name="instdecstruct"></a>
+  <h3>Instruction Decode Structure</h3>
+
+<p>
+The decode structure definition is shown below. The definition
+of this structure is to be found in <tt>sparc.h</tt>.
+</p>
+
+
+<!--center>
+<img width=800 src="images/decode.gif">
+</center-->
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:green'>// Defer structure definition</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>struct</span><span style='font-size:8.0pt;font-family:Consolas'> 
+DecodeStruct;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>typedef</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>struct</span> DecodeStruct *pDecode_t;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>typedef</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> (*p_func) (pDecode_t);</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>struct</span><span style='font-size:8.0pt;font-family:Consolas'>
+DecodeStruct {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 opcode;              <span style='color:green'>// Instruction opcode</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+p_func function;            <span style='color:green'>// Pointer to inst.c
+function</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 rd;                  <span style='color:green'>// rd register number</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 rs1;                 <span style='color:green'>// rs1 register number</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 rs1_value;           <span style='color:green'>// rs1 register value</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 imm_disp_rs2;        <span style='color:green'>// Immediate,
+displacement or rs2 </span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 ev;                  <span style='color:green'>// Extended value (ev) =
+r[rs1] + (i ? sign_ext(imm) : r[rs2])</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 op_2_3;              <span style='color:green'>// op2 or op3 value</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 i;                   <span style='color:green'>// i, imm/rs2 indicator</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 PC;                  <span style='color:green'>// Current program
+counter value</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 nPC;                 <span style='color:green'>// Next program counter
+value</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 PSR;                 <span style='color:green'>// Program status
+register value</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+pPSR_t p;                   <span style='color:green'>// Pointer to structured
+version of PSR</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 wb_type;             <span style='color:green'>// Write back flag</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 value;               <span style='color:green'>// Write back value</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 value1;              <span style='color:green'>// Second (optional)
+write back value</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>};</span></p>
+</p>
+On the whole, the field
+order as shown below is the order in which the fields will be updated,
+as the instruction is processed. So the <tt>opcode</tt> field is updated
+first, during fetch, and then decode looks up the execution function from
+the tables and places its pointer in <tt>function</tt>, as well as
+splitting up the sub-fields into the consistuent parts, such as 
+<tt>rd</tt>&mdash;the destination register number. Note that some
+of the structure fields for this are shared amongst the instructions.
+For instance, the <tt>imm_disp_rs2</tt> field can hold an immediate
+value (e.g. for <tt>SETHI</tt>) or a displacement value (e.g. for
+a branch instruction) or indeed the value of the secondary source register
+(<tt>rs2</tt>). As it is context dependant, the execution functions
+interprets this field appropriately to the instruction it is processing.
+All the fields from <tt>function</tt> to <tt>i</tt> are updated 
+(if necessary) during decode.
+</p>
+
+<p>
+During execution, the selected function will update the "program
+counter" and "next program counter" fields (<tt>PC</tt> and <tt>nPC</tt>).
+The status register value is also recorded (<tt>PSR</tt>), but a
+structured version pointer (<tt>p</tt>) is also mapped over this value for 
+ease of further testing and interpreting the individual bits. 
+If a write back operation is
+required from the execution phase, this is flagged in <tt>wb_type</tt>,
+and the value to be written recorded in <tt>value</tt>. Occasionally
+an additional writeback value is to be written, and this will be placed
+in <tt>value1</tt>.
+</p>
+
+<p>
+The writeback phase takes all the data from the second part of the
+structure (from <tt>PC</tt> to <tt>value1</tt>), which will by now
+be completely filled in, and updates the model's state accordingly.
+The instruction processing is complete, and a new instruction can
+be executed.
+</p>
+
+  <a name="funcdec"></a>
+  <h3>Instruction Function Declarations</h3>
+
+<p>
+For reference, the definitions of all the execution function are shown
+below. The prototypes for these instructions are to be found in <tt>inst.h</tt>,
+with the actual functions in <tt>inst.c</tt>.
+</p>
+
+
+<!--center>
+<img src="images/funcs.gif">
+</center-->
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> UNIMP   (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> CALL    (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> BICC    (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> SETHI   (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> SLL     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> SRL     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> SRA     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> RDY     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> RDPSR   (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> RDWIM   (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> RDTBR   (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> WRY     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> WRPSR   (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> WRWIM   (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> WRTBR   (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> JMPL    (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> RETT    (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> TICC    (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> SAVE    (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> RESTORE (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> FLUSH   (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> MULSCC  (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> LD      (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> LDUB    (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> LDUH    (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> LDD     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> LDSB    (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> LDSH    (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> ST      (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> STB     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> STH     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> STD     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> SWAP    (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> LDSTUB  (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> MUL     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> DIV     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> ADD     (pDecode_t d);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>extern</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> AND     (pDecode_t d);</span></p>
+
+<p>
+As mentioned before all of these functions have identical prototypes,
+compatible with the <tt>p_func</tt> type used in the lookup tables,
+where these functions are referenced (see <a href="#table">above</a>). Some
+of the functions appear multiple times within the lookup tables, to service
+similar instruction operations, such as <tt>MUL</tt>. In these cases,
+the function listed in the lookup tables will be the actual function name
+for that decode position, but this will be mapped to the generic function.
+</p>
+
+<a name="toplevel"></a>
+<h2>Top Level Structure</h2>
+
+<p>
+Some pseudo-code is shown below respresenting the structure of
+the top level model code, with the function call hierarchy shown.
+Functions might be optionally called from a higher level function,
+and these are shown between brackets. Where functionality exists
+within the function level, these are summarised between &lt; and
+&gt; symbols. The actual source code for the top level functionality
+is found in <tt>sparc_iss.c</tt> for the <tt>main()</tt>
+function, and in <tt>execute.c</tt> for <tt>Run</tt>.
+</p>
+
+<!--center>
+<img src="images/top.gif">
+</center-->
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>main() {</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>  ReadElf (fname)</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>    LoadMemWord()</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>  Run (ExecCount)</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>    <span style='color:blue'>WHILE</span> not terminate
+and not executed ExecCount instructions </span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>      &lt;process interrupts&gt;</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>      &lt;process traps&gt;</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>        [ WriteReg() ]</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>      &lt;process breakpoints&gt;</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>      Ifetch(PC,   &amp;(d-&gt;opcode));                 <span
+style='color:green'>// FETCH</span></span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>        [ RegisterDump() ]</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>      Decode (d);                                 <span
+style='color:green'>// DECODE</span> </span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>        [ ReadReg() ]</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>      d-&gt;function(d);                             <span
+style='color:green'>// EXECUTE</span></span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>        [ Trap() ]</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>        [ MemRead() ]</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>        [ WriteRegAll() ] </span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>           [ GetRegBase() ] </span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>        [ MemWrite() ]</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>           [ ReadRegsAll() ] </span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>           [ GetRegBase() ] </span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>        [ TestCC() ]</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>        [ RegisterDump() ] </span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>           [ ReadReg() ]</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>           [ DispReadReg() ]</span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>      WriteBack{d);                               <span
+style='color:green'>// WRITEBACK</span></span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>        WriteReg{d-&gt;value, d-&gt;rd) </span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>    <span style='color:blue'>END WHILE</span></span></p>
+
+<p class=MsoNormal style='text-indent:21.3pt'><span style='font-size:8.0pt;
+font-family:Consolas'>}</span></p>
+
+
+<p>
+From the <tt>main()</tt> top level, program code is first read from an ELF file
+into memory via <tt>ReadElf()</tt>. A function <tt>Run()</tt> is then called
+to execute the code until completed or reaches a termination point (such as a breakpoint).
+A <tt>while</tt> loop processes the instructions, one at a time, until finished, and then
+the basic fetch-decode-execute-writeback steps are coded. <tt>Ifetch()</tt>
+implements the first step, with a call to <tt>Decode()</tt> the next. The execute
+phase is a call to the previously looked up function pointer. Within the
+execute function, various sub-functions might be called for handling
+exceptions (<a href="#trap"><tt>Trap()</tt></a>), memory accesses (e.g. <tt>MemRead</tt>),
+register accesses (e.g. <tt>ReadReg()</tt>) or testing status bits (<tt>TestCC</tt>).
+Some of these functions also make reference to further sub-functions, and
+these are also indicated.
+</p>
+<p>
+As the main loop processes instructions, these might generate exceptions
+(traps), hit breakpoints or generate interrupts. These are all tested
+for within <tt>Run</tt> <em>before</em> starting the next instruction's
+fetch cycle. This would normally set some status bits of the <tt>PSR</tt>
+and then update the <tt>PC</tt> to point to the trap address. The subsequent
+fetch then starts executing from trap code, rather than the next expected
+instruction address.
+</p>
+
+<a name="fetch"></a>
+<h2>Instruction Fetch</h2>
+
+<p>
+The fetch functionality is basically a memory read, and the function does in fact live with
+the other memory access functions in the <tt>read_write.c</tt> file. However, the reading
+of instructions has some restrictions, and additional checks are made.
+</p>
+
+<!--center>
+<img width=500 src="images/fetch.gif">
+</center-->
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+>
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>
+<span style='color:blue'>static</span> uint32 Memory [1 << (MEM_SIZE_BITS << 2];</span></p>
+</p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>void</span><span style='font-size:8.0pt;font-family:Consolas'>
+Ifetch (<span style='color:blue'>const</span> uint64 physaddr, uint32 * <span
+style='color:blue'>const</span> inst) </span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>{</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint64 PA = physaddr &amp; ADDR_MASK;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:green'>// Misaligned instruction fetch</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>if</span> ((PA &amp; (uint64)3) != 0) {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+RegisterDump();</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+terminate = 1;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+<span style='color:blue'>return</span>;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    }</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:green'>// Trying to read instructios out of range</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>if</span> ((PA &amp; ~ADDR_MASK) != 0) {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+RegisterDump();</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>        terminate
+= 1;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+<span style='color:blue'>return</span>;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    }</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    *inst
+= Memory[PA &gt;&gt; (uint64)2];</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p>
+Shown above is the fetch function, along with the declaration of the processor
+memory array. As the memory size is configurable with macro definitions, the
+address passed in to the function is masked with a predefined macro
+<tt>ADDR_MASK</tt>, before being checked for 32 bit alignment and
+address range. As both these are fatal errors, a register dump is 
+performed before returning with the terminate flag set. If the address is 
+valid, then a memory read is performed at the masked address, and 
+the resulting value returned in the pointer <tt>*inst</tt>.
+</p>
+
+<a name="decode"></a>
+<h2>Decode and Register Read</h2>
+
+<p>
+The decode function is shown below. Its main purpose is to perform the
+lookup of the execution function from one of the 3 lookup tables
+(see <a href=#table">above</a>), and fill in the top half of
+the decode structure by extracting bits from the opcode and (optionally)
+reading register values. This function is found in the <tt>execute.c</tt>
+source file.
+</p>
+
+<!--center>
+<img src="images/decode_code.gif">
+</center-->
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>static</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> Decode(pDecode_t d)</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>{</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 fmt_bits = (d-&gt;opcode &gt;&gt; FMTSTARTBIT) &amp; LOBITS2;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 op2      = (d-&gt;opcode &gt;&gt; OP2STARTBIT) &amp; LOBITS3;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 op3      = (d-&gt;opcode &gt;&gt; OP3STARTBIT) &amp; LOBITS6;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 I_idx, regvalue;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+d-&gt;PC      = PC;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+d-&gt;nPC     = nPC;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+d-&gt;PSR     = PSR;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+d-&gt;wb_type = NO_WRITEBACK;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>switch</span> (fmt_bits) {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>case</span> 1:  <span style='color:green'>// CALL</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;function     = format1;                         </span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;imm_disp_rs2 = d-&gt;opcode &amp; LOBITS30;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+<span style='color:blue'>break</span>;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>case</span> 0:  <span style='color:green'>// SETHI, Branches</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;function     = format2[op2];                     </span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;rd           = (d-&gt;opcode &gt;&gt; RDSTARTBIT) &amp; LOBITS5;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;op_2_3       = (d-&gt;opcode &gt;&gt; OP2STARTBIT) &amp; LOBITS3;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;imm_disp_rs2 = (d-&gt;opcode &amp; LOBITS22);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+<span style='color:blue'>break</span>;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>case</span> 3:  <span style='color:green'>// Memory
+accesses, ALU etc.</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>case</span> 2:  </span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;function     = format3[op3 + ((fmt_bits &amp; 1) &lt;&lt; 6)];</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;rd           = (d-&gt;opcode &gt;&gt; RDSTARTBIT)  &amp; LOBITS5;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;op_2_3       = (d-&gt;opcode &gt;&gt; OP3STARTBIT) &amp; LOBITS6;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;rs1          = (d-&gt;opcode &gt;&gt; RS1STARTBIT) &amp; LOBITS5;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;i            = (d-&gt;opcode &gt;&gt; ISTARTBIT)   &amp; LOBITS1;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;imm_disp_rs2 = (d-&gt;opcode &gt;&gt; RS2STARTBIT) &amp; LOBITS13;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+ReadReg (d-&gt;rs1, &amp;d-&gt;rs1_value);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+I_idx = op3 + ((fmt_bits &amp; 1) &lt;&lt; 6);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+regvalue = (I_idx &lt; FIRST_RS1_EVAL_IDX) ? 0 : d-&gt;rs1_value;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+<span style='color:blue'>if</span> (d-&gt;i)</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>          
+d-&gt;ev = regvalue + sign_ext13(d-&gt;imm_disp_rs2);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+<span style='color:blue'>else</span> {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>          
+ReadReg(d-&gt;imm_disp_rs2 &amp; LOBITS5, &amp;d-&gt;ev);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>          
+d-&gt;ev += regvalue;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+}</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:green'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+<span style='color:blue'>if</span> (I_idx == STORE_DBL_IDX) {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>           
+ReadReg (d-&gt;rd &amp; ~LOBITS1, &amp;d-&gt;value);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>           
+ReadReg ((d-&gt;rd &amp; ~LOBITS1)+1, &amp;d-&gt;value1);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+} <span style='color:blue'>else</span> <span style='color:blue'>if</span>
+(I_idx == TICC_IDX &amp;&amp; !d-&gt;i)</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>           
+ReadReg (d-&gt;imm_disp_rs2 &amp; LOBITS5, &amp;d-&gt;value); </span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+<span style='color:blue'>else</span> <span style='color:blue'>if</span>
+(fmt_bits &amp; 1)</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>           
+ReadReg (d-&gt;rd, &amp;d-&gt;value);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+<span style='color:blue'>break</span>;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   }</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p>
+Firstly, the decode structure is
+updated with copies of the status register and PC (and next PC). The
+main format type decode is then done with a case statement. For
+format 1 and 2 instructions (with fmt_bits values of 1 and 0) it
+is just a matter of extracting bits from the opcode fields and placing 
+in the decode structure, and the execute function table lookup. 
+For format 2 instructions (fmt_bits 2 and 3) some additional functionality 
+is required. All format2 instructions need to read at least 1
+source register, but depending on the other opcode fields and
+additional source registers may need to be read, and the
+rest of the code implements this.
+</p>
+
+<a name="execute"></a>
+<h2>Execute</h2>
+
+<p>
+The execution functions all reside in <tt>inst.c</tt>, with one for
+each of the functions in the decode tables shown in a <a href="#table">previous section</a>.
+There are too many
+to discuss in detail here, and we will only look at a couple of examples.
+</p>
+
+  <a name="arith"></a>
+  <h3>Arithmetic Example</h3>
+
+<p>
+Most of the aritmetic and logic instructions (all of which are format 3
+instructions with an <tt>op</tt> value of 2) have functions who generate
+a writeback value and update the status register. A typical function is shown
+below for multiplication.
+</p>
+
+<!---
+<pre style="font-family:Courier; font-size:10pt; color:#603000";>
+  void MUL (pDecode_t d)
+  {
+      uint64 x, y, z; 
+      uint32 cc;
+  
+      cc = (d->PSR >> PSR_CC_CARRY) & LOBITS4;
+      x = d->rs1_value;
+      y = d->ev;
+  
+      // Sign extend for SMUL/SMULCC
+      if (d->op_2_3 & LOBITS1) {
+          x |= (x & 0x80000000) ? ((uint64)0xffffffff << (uint64)32) : 0;
+          y |= (y & 0x80000000) ? ((uint64)0xffffffff << (uint64)32) : 0;
+          z = (int64)x * (int64)y;  // actual multiplication (signed)
+      } else
+          z = x * y;                // actual multiplication (unsigned)
+      z &= 0xffffffff;              // lo 32 bits
+  
+      // UMULCC or SMULCC
+      if (d->op_2_3 & BIT4) {    
+          cc = (cc & ~(1 << CC_ZERO))     | (((z == 0) ? 1 : 0) << CC_ZERO);
+          cc = (cc & ~(1 << CC_NEGATIVE)) | (((uint32)(z >> 31) & 1) << CC_NEGATIVE);
+          cc &= ~(1 << CC_OVERFLOW);
+          cc &= ~(1 << CC_CARRY);
+          d->PSR = (d->PSR & ~(0xf << PSR_CC_CARRY)) | (cc << PSR_CC_CARRY);
+      }
+  
+      d->wb_type = WRITEBACKREG;
+      d->value = (uint32)(z & 0xffffffff);
+      d->PC = d->nPC;
+      d->nPC += 4;
+  }
+</pre>
+--->
+
+<center>
+<!-- img src="images/arith.gif" -->
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>void</span><span style='font-size:8.0pt;font-family:Consolas'> MUL
+(pDecode_t d)</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>{</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint64 x, y, z; </span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+uint32 cc;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    cc
+= (d-&gt;PSR &gt;&gt; PSR_CC_CARRY) &amp; LOBITS4;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    x =
+d-&gt;rs1_value;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    y =
+d-&gt;ev;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:green'>    // Sign extend for SMUL/SMULCC</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>if</span> (d-&gt;op_2_3 &amp; LOBITS1) {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>        x
+|= (x &amp; 0x80000000) ? ((uint64)0xffffffff &lt;&lt; (uint64)32) : 0;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+y |= (y &amp; 0x80000000) ? ((uint64)0xffffffff &lt;&lt; (uint64)32) : 0;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+z = (int64)x * (int64)y;  <span style='color:green'>// actual multiplication
+(signed)</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    } <span
+style='color:blue'>else</span> </span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+z = x * y;                <span style='color:green'>// actual multiplication (unsigned)</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    Y =
+(uint32)(z &gt;&gt; 32);        <span style='color:green'>// Y = hi 32 bits</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    z
+&amp;= 0xffffffff;              // <span style='color:green'>z = lo 32 bits</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:green'>// UMULCC or SMULCC</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>if</span> (d-&gt;op_2_3 &amp; BIT4) {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+cc = (cc &amp; ~(1 &lt;&lt; CC_ZERO))     | (((z == 0) ? 1 : 0) &lt;&lt;
+CC_ZERO);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+cc = (cc &amp; ~(1 &lt;&lt; CC_NEGATIVE)) | (((uint32)(z &gt;&gt; 31) &amp; 1)
+&lt;&lt; CC_NEGATIVE);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+cc &amp;= ~(1 &lt;&lt; CC_OVERFLOW);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+cc &amp;= ~(1 &lt;&lt; CC_CARRY);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;PSR = (d-&gt;PSR &amp; ~(0xf &lt;&lt; PSR_CC_CARRY)) | (cc &lt;&lt;
+PSR_CC_CARRY);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    }</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+d-&gt;wb_type = WRITEBACKREG;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+d-&gt;value = (uint32)z;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+d-&gt;PC = d-&gt;nPC;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+d-&gt;nPC += 4;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>}</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-autospace:none'><span
+style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+</center>
+
+<p>
+In this function, the carry bits are extracted from the status register in to <tt>cc</tt>,
+and the two operands into <tt>x</tt> and <tt>y</tt> from values all ready
+extracted during decode. This function is a generic function for signed
+and unsigned multiplication, as well as for multiplication with and
+without carry. Therefore some further decode needs to be performed from
+values already in the decode structure to select the appropriate operation.
+</p>
+<p>
+Firstly, if a signed operation is required, <tt>x</tt> and <tt>y</tt> are
+sign extended before a signed multiply, otherwise a simple multiply
+is performed. Then, the <tt>cc</tt> carry status bits are only updated
+for <tt>CC</tt> variants of the instruction, and the status register, <tt>PSR</tt>
+updated. The result is always written back, and so the write back flag is set,
+and the result in <tt>z</tt> placed in the <tt>value</tt> field. The 
+program counter fields are then updated with a simple increment.
+</p>
+<p>
+Instructions like this, you might note, do not generate any kind
+of trap or exception. If the instruction is legal (and it will be if we got this far)
+then a result will definitely be generated. This isn't true for 
+instructions such as memory accesses, so we'll look at an
+example next.
+</p>
+
+<a name="memaccess"></a>
+<h3>Memory Access Example</h3>
+
+<p>
+The memory access instruction example we'll look at is the load
+double word (<tt>LDD</tt>) instruction. It is very similar in structure
+to the <a href="#fetch"><tt>Ifetch</tt></a> function we saw
+ealier. It makes some checks on it's arguments, and throws a trap
+if bad, otherwise a memory read is performed.
+</p>
+
+<!-- center>
+<img src="images/memcode.gif">
+</center -->
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>void</span><span style='font-size:8.0pt;font-family:Consolas'> LDD
+(pDecode_t d)</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>{</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>if</span> (d-&gt;rd &amp; LOBITS1) {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+Trap(d, SPARC_ILLEGAL_INSTRUCTION);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    } <span
+style='color:blue'>else</span> <span style='color:blue'>if</span> (d-&gt;ev
+&amp; LOBITS3) {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+Trap(d, SPARC_MEMORY_ADDR_NOT_ALIGNED);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    } <span
+style='color:blue'>else</span> {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+MemRead(d-&gt;ev, 8, d-&gt;rd &amp; ~LOBITS1, 0);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;PC = d-&gt;nPC;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+d-&gt;nPC += 4;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    }</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p>
+The first check is for destination register alignment. As this is a
+double word load, then the destination register number must be
+even. Similarly, the address for the read must be 32 bit aligned.
+If either of these checks fails, a call to <a href="#trap"><tt>Trap</tt></a>
+is made. If no exception is thrown, then a memory read is performed,
+placing the read value directly into register selected by <tt>rd</tt>.
+The program counters are updated incrementally in the decode structure,
+ready for a writeback update.
+</p>
+
+
+<a name="writeback"></a>
+<h2>Write Back</h2>
+
+<p>
+The write back function is perhaps the simplest of them all. In all cases
+the model's program counters and status registers are updated with the values
+from the decode structure. If the writeback flag is set, the destination
+register is also updated, via a call to <tt>WriteReg()</tt>.
+</p>
+
+<!--center>
+<img width=400 src="images/writeback.gif">
+</center-->
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>static</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> WriteBack (<span style='color:blue'>const</span>
+pDecode_t d)</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>{</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    PC 
+= d-&gt;PC;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    nPC
+= d-&gt;nPC;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    PSR
+= d-&gt;PSR;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>if</span> (d-&gt;wb_type == WRITEBACKREG) </span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>       
+WriteReg(d-&gt;value, d-&gt;rd);</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p>
+The <tt>WriteBack()</tt> function is located in the <tt>execute.c</tt>
+source code file.
+</p>
+
+
+<a name="trap"></a>
+<h2>Traps</h2>
+
+<p>
+The trap function does not itself casue the program flow to change. Instead
+it is called with a trap type from the various execution functions etc., and
+updates some global state (i.e. <tt>TrapType</tt> that is processed at the <a href="#toplevel">top
+level</a>, as we saw earlier).
+</p>
+
+<p>
+Traps can be disabled with a bit in the status register, so if <tt>Trap()</tt> is
+called with this bit set, then this is fatal. In that case a register dump is
+performed, and the terminate flag set.
+</p>
+<p>
+The <tt>Trap()</tt> function is found in the <tt>inst.c</tt> file, along
+with all the execution functions, mainly because it is mostly called
+due to exceptions generated from these functions.
+</p>
+
+<!--center>
+<img width=500 src="images/trap.gif">
+</center-->
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas;
+color:blue'>static</span><span style='font-size:8.0pt;font-family:Consolas'> <span
+style='color:blue'>void</span> Trap (pDecode_t d, uint32 trap_no) </span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>{</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>int</span> tn = trap_no &amp; LOBITS8;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:green'>// Trapped whilst traps disabled</span></span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    <span
+style='color:blue'>if</span> (d-&gt;p-&gt;et == 0) {</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>        
+RegisterDump();</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>        
+terminate = d-&gt;opcode;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>        
+<span style='color:blue'>return</span>;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>    }</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>   
+TrapType = (TrapType &amp; ~(LOBITS8)) | tn;</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-indent:21.3pt;
+text-autospace:none'><span style='font-size:8.0pt;font-family:Consolas'>}</span></p>
+
+<p class=MsoNormal align=left style='text-align:left;text-autospace:none'><span
+style='font-size:8.0pt;font-family:Consolas'>&nbsp;</span></p>
+
+<a name="other"></a>
+<h2>Other Functions</h2>
+
+<p>
+The above code forms the core of the functionality for the model, but mentioned
+before are various other functions to support this code. Broadly speaking these
+fall in to one of 3 catagories; namely getting global state (PC, PSR etc.),
+memory accesses and register accesses. There are a couple of debug oriented
+functions (<tt>RegisterDump()</tt>, which uses <tt>DispReadReg()</tt>, and 
+<tt>DispDecode()</tt>), which are fairly
+self explanatory, and don't need documenting here.
+</p>
+<p>
+There are four functions for retrieving state: <tt>GetPC()</tt>, <tt>GetnPC()</tt>,
+<tt>GetPSR()</tt> and <tt>GetIRL()</tt>. These are simple data hiding modules, and
+return the raw value of the particular state. They are located in <tt>execute.c</tt>
+</p>
+<p>
+The memory access functions (in <tt>read_write.c</tt>) consist of <tt>LoadMemWord()</tt>
+(only used to load program data to memory), <tt>MemRead()</tt> and <tt>MemWrite()</tt>.
+These last two don't return a value (for reads), or take a value (for writes), but
+simply move data directly from memory to a register or vice versa.
+</p>
+<p>
+For register accesses we have <tt>ReadReg()</tt> and <tt>WriteReg()</tt>, both located in
+<tt>read_write.c</tt>. Unlike the memory functions, these do return a value (for reads)
+and use a input value (for writes). These functions are aware of the register windowing,
+and virtualise this away. Some functions which treat all the registers as a flat space
+exist, and are called from various places where appropriate. These are <tt>WriteRegAll()</tt>
+and <tt>ReadRegAll()</tt>. The offset within this global register space is fetched with
+<tt>GetRegBase()</tt>
+</p>
+
+<p>
+There is one other support function in <tt>inst.c</tt> that I should mention.
+<tt>TestCC()</tt> is used by the branch instruction functions (<tt>BICC()</tt> and 
+<tt>TICC()</tt>) to determine whether to branch or not. It tests various status register
+bits depending on the instruction. 
+</p>
+
+<p>
+The program execution data is loaded in to the SPARC memory array using a 
+a function <tt>ReadElf()</tt>, located in the <tt>elf.c</tt> source code file.
+It takes a single file name argument where it expects to find a SPARC v8
+executable ELF file. We'll not look at the details of this function here,
+but information about the ELF format can be found via the <a href="#links">links</a>
+section below.
+</p>
+
+
+<a name="global"></a>
+<h2>Global State</h2>
+<p>
+This SPARC model does use global state to implement its functionality. Normally
+this state would be wrapped in data hiding functions, with checking and
+limited access etc. but, as mentioned in the <a href="#intro">introduction</a>,
+this particular model is meant to be as simple and easy to understand as possible,
+and the amount of global state, and its simplicity, means that the more
+rigorous approach would only serve to complicate the source code. I will briefly
+describe the major state variables here to aid navigation of the code's functionality
+</p>
+
+<a name="procstate"></a>
+<h3>Processor State</h3>
+
+<p>
+The SPARC processor's major registers are all mapped onto globals variables, though some
+are limited in scope via static declarations. The main control and state registers
+are declared in <tt>execute.c</tt>:
+</p>
+
+<table style="font-size:11pt;">
+<tr><td width=20>&nbsp;</td><td width=70><tt>PC</tt></td>    <td>Program Counter</td></tr>
+<tr><td width=20>&nbsp;</td><td width=70><tt>nPC</tt></td>   <td>Next Program Counter</td></tr>
+<tr><td width=20>&nbsp;</td><td width=70><tt>PSR</tt></td>   <td>Processor Status Register</td></tr>
+<tr><td width=20>&nbsp;</td><td width=70><tt>IRL</tt></td>   <td>Interrupt Level</td></tr>
+</table>
+
+<p>
+These variables are all declared static, and so are limited in scope to functions
+in <tt>execute.c</tt>. Additional globals map to processor registers in <tt>inst.c</tt>.
+</p>
+
+<table style="font-size:11pt;">
+<tr><td width=20>&nbsp;</td><td width=70><tt>TBR</tt></td>    <td>Trap Base Register</td></tr>
+<tr><td width=20>&nbsp;</td><td width=70><tt>WIM</tt></td>    <td>Window Invalid Mask</td></tr>
+<tr><td width=20>&nbsp;</td><td width=70><tt>Y</tt></td>      <td>Multiply/Divide Register</td></tr>
+</table>
+
+<p>
+The <tt>TBR</tt> and <tt>WIM</tt> variables are declared fully global, but the
+<tt>Y</tt> variable is limited in scope to just <tt>inst.c</tt>.
+All these global variables implement registers with the SPARC processor. The function of these
+registers is not documented here, and for those interested in following this up more, section
+4.2 of the SPARC Architecture Manual v8 explains their functionality. A link to this
+document can be found in the <a href="#links">Useful Links</tt></a> section.
+</p>
+<p>
+Some additional state of the processor system is also mapped to global variable. Unlike
+the above state, these aren't mapped to registers directly visible to the instruction
+set, but still have direct counter parts in the processor system hardware. These are:
+</p>
+
+<table style="font-size:11pt;">
+<tr><td width=20>&nbsp;</td><td width=100><tt>Globals[]</tt></td>    <td>Global Registers</td></tr>
+<tr><td width=20>&nbsp;</td><td width=100><tt>Locals[]</tt></td>     <td>Local Registers</td></tr>
+<tr><td width=20>&nbsp;</td><td width=100><tt>Outs[]</tt></td>       <td>Out (and In) Registers</td></tr>
+<tr><td width=20>&nbsp;</td><td width=100><tt>Memory[]</tt></td>     <td>System memory</td></tr>
+</table>
+
+<p>
+The first three of the above list are for implementing the windowed registers of
+the SPARC (see section 4.1 of the architecture manual). It is not a direct mapping
+as the <tt>Outs[]</tt> doubles for both in the "out" and "in" registers. The
+<tt>Memory[]</tt> implements the accessible memory for executable and 
+program data.
+</p>
+
+<a name="userstate"></a>
+<h3>User Control and Miscellaneous State</h3>
+
+<p>
+The user command line options affect control within the model, and
+global variables are used to communicate this control.
+</p>
+
+<table style="font-size:11pt;">
+<tr><td width=20>&nbsp;</td><td width=100><tt>Verbose</tt></td>    <td>Controls verbosity</td></tr>
+<tr><td width=20>&nbsp;</td><td width=100><tt>NumRunInst</tt></td>    <td>Number of instructions to run before breakpoint</td></tr>
+<tr><td width=20>&nbsp;</td><td width=100><tt>BreakPoint</tt></td>    <td>Address of breakpoint</td></tr>
+<tr><td width=20>&nbsp;</td><td width=100><tt>*ofp</tt></td>    <td>Pointer to user specified verbosity output file</td></tr>
+</table>
+
+<p>
+There are some final global variables worth mentioning here for completeness:
+</p>
+
+<table style="font-size:11pt;">
+<tr><td width=20>&nbsp;</td><td width=100><tt>terminate</tt></td>    <td>Flags main loop to terminate</td></tr>
+<tr><td width=20>&nbsp;</td><td width=100><tt>TrapType</tt></td>    <td>Flags main loop that a trap has occured</td></tr>
+<tr><td width=20>&nbsp;</td><td width=100><tt>ProcNo</tt></td>    <td>An ID number for this particular processor instantiation</td></tr>
+</table>
+
+<p>
+The first two variables are used to communicate to the top level code. The
+<tt>terminate</tt> variable is set by various sources, for fatal exceptions etc.
+The <tt>TrapType</tt> variable is set by non-fatal exceptions which are
+handled as traps or interrupts. The last variable <tt>ProcNo</tt> isn't actually
+used as yet, but is a hook for adding functionality should the model be used
+in an environment where multiple instantiations of the model are required.
+</p>
+
+<a name="appendices"></a>
+<h2>Appendices</h2>
+
+<a name="limit"></a>
+<h3>Model Limitations</h3>
+
+<p>
+This model will allow arbitrarily compiled code to be executed from, say,
+a gcc SPARC cross-compiler, but some instructions, alluded to above, are
+not supported. These are for the alternate space, the floating point
+unit, and for the co-processor interface. The exact instructions not
+supported are listed <a href="#unsupported">below</a>.
+</p>
+<p>
+In addition, the model does not currently have a memory management
+unit (MMU), and all addresses are physical. This is left as an exercise
+for the student. In <tt>Run()</tt> (in <tt>execute.c</tt>) there is 
+an assignment <tt>physaddr = (uint64) PC;</tt>. This is where an
+MMU function should be inserted. Also, the memory accesses are not
+put through a model of a cache. Caching is invisible to the instructions,
+and as this is an ISS, it was not deemed necessary for this simple model.
+However, the original Tricore 2 model had both an MMU and cache model.
+</p>
+
+<a name="unsupported"></a>
+<h4>Unsupported</h4>
+<p>
+All the instructions that are not supported are not core instructions,
+but associated with the alternate space support or the floating point
+co-processor or generic co-processing port.
+</p>
+
+<pre style="font-family:Courier; font-size:10pt; color:#603000";>
+  // Alternate space instructions
+  LDSBA LDSHA LDUBA LDUHA LDA LDDA
+  STBA STHA STA STDA 
+  LDSTUBA SWAPA
+  RDASR WRASR
+
+  // Floating point unit
+  LDF LDDF LDFSR 
+  STF STDF STFSR STDFQ
+  FBfcc 
+  FPop 
+
+  // Coprocessor
+  LDC LDDC LDCSR
+  STC STDC STCSR STDCQ
+  CBccc
+  CPop
+</pre>
+
+<h4>Supported Instructions</h4>
+
+<p>
+Below are listed the instructions supported by the ISS. This contains all the
+core instructions, and a SPARC compiler would generate code which is compatible
+with this list.
+</p>
+
+<pre style="font-family:Courier; font-size:10pt; color:#603000";>
+  Load:          LDSB LDSH LDUB LDUH LD LDD
+  Store:         STB STH ST STD
+  Atomic:        SWAP LDSTUB
+  Misc:          SETHI NOP
+  Logical*:      AND ANDcc ANDN ANDNcc OR ORcc ORN ORNcc XOR XORcc XNOR XNORcc
+  Shift:         SLL SRL SRA
+  Add**:         ADD ADDcc ADDX ADDXcc 
+  Subtract**:    SUB SUBcc SUBX SUBXcc
+  Multiply***:   UMUL UMULcc SMUL SMULcc 
+  Divide***:     UDIV UDIVcc SDIV SDIVcc
+  Tagged add**:  TADDcc TADDcc TSUBccTV TSUBccTV
+  Multiply Step: MULScc
+  Window:        SAVE RESTORE
+  Branch:        Bicc
+  Prog control:  CALL JMPL 
+  Trap:          RETT Ticc
+  Read Regs:     RDY RDPSR RDWIM RDTBR 
+  Write Regs:    WRY WRPSR WRWIM WRTBR
+  Mem Sync:      STBAR FLUSH
+  Unimplemented: UNIMP
+
+NOTES:
+  * The individual logical instruction have the N, cc, and Ncc
+    operation performed in a common function which does a partial
+    decode.
+
+ ** All add, subtract and tagged add are implemented in a
+    single function which does a partial decode.
+
+*** All multiply and divide instructions (not MULScc) implement
+    their cc versions in a common function which does a partial
+    decode.
+</pre>
+
+<h4>Supported synthetic instructions</h4>
+<p>
+Sparc assembly has a number of instructions which are not really seperate
+instructions, but map (are synthesised) onto a core instruction. These are
+supported by the ISS and listed here.
+</p>
+
+<pre style="font-family:Courier; font-size:10pt; color:#603000";>
+  BTST BSET BCLR BTOG
+  CLR CLRB CLRH CLR
+  CMP
+  DEC DECCC
+  INC INCC
+  JMP
+  MOV
+  NOT NEG
+  SET
+  TST
+  SKIPZ SKIPNZ
+</pre>
+
+
+
+<a name="download"></a>
+<h3>Download</h3>
+
+<p>
+The model is released under version 3 of the GPL, and comes with no warranties 
+whatsoever. You can download the model and source code from 
+<a href="https://github.com/wyvernSemi/sparc">github</a>.
+</p>
+
+
+<a name="links"></a>
+<h3>Useful links</h3>
+
+<ul>
+<li><a href="https://docs.oracle.com/cd/E19641-01/802-1947/802-1947.pdf">SPARC Assembly Language Reference Manual</a>
+<li><a href="http://www.gaisler.com/doc/sparcv8.pdf">SPARC Architecture Manual version 8</a>
+<li><a href="http://www.skyfree.org/linux/references/ELF_Format.pdf">Executable and Linkable Format (ELF)</a>
+<li><a href="http://www.cmpware.com/Docs/BuildingGcc.pdf">Howto</a> on building a SPARC cross-compiler
+</ul>
+
+<hr>
+<address>
+Copyright &copy; 2010 Simon Southwell<br>
+<a href="mailto:simon&#64anita-simulators.org.uk">simon&#64anita-simulators.org.uk</A>
+</address>
+<br>
+
+<!------------------>
+</HTML>
