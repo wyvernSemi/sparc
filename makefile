@@ -6,7 +6,7 @@
 #
 # Makefile for 'sparc_iss' instruction set simulator
 # 
-# $Id: makefile,v 1.5 2013-06-30 08:45:44 simon Exp $
+# $Id: makefile,v 1.6 2016-10-18 05:52:11 simon Exp $
 # $Source: /home/simon/CVS/src/cpu/sparc/makefile,v $
 # 
 ##########################################################
@@ -97,7 +97,7 @@ run_test: ${TARGET}
 ##########################################################
 
 clean:
-	@/bin/rm -f ${TARGET} ${OBJDIR}/*.o ${OBJDIR}/*.g* *.info ${TESTDIR}/*.o ${TESTDIR}/*.aout ${TESTDIR}/*.map
+	@/bin/rm -f ${TARGET} ${OBJDIR}/*.o ${OBJDIR}/*.g* *.info ${TESTDIR}/*.o ${TESTDIR}/*.aout ${TESTDIR}/*.map ${TESTDIR}/*.sid
 
 cleanmsvc:
 	@/bin/rm -rf ${MSVCDIR}/*.sdf ${MSVCDIR}/*.suo ${MSVCDIR}/${BASENAME}/*.vcxproj.user ${MSVCDIR}/Debug ${MSVCDIR}/Release ${MSVCDIR}/ipch ${MSVCDIR}/${BASENAME}/Debug ${MSVCDIR}/${BASENAME}/Release

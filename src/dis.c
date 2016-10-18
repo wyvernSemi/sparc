@@ -16,12 +16,13 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: dis.c,v 1.2 2013-06-29 08:57:39 simon Exp $
+// $Id: dis.c,v 1.3 2016-10-18 05:52:44 simon Exp $
 // $Source: /home/simon/CVS/src/cpu/sparc/src/dis.c,v $
 //
 //=============================================================
 
 #include <stdio.h>
+#include <string.h>
 #include "sparc.h"
 
 extern FILE *ofp;

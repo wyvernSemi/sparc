@@ -19,17 +19,20 @@
 // You should have received a copy of the GNU General Public License
 // along with sparc_iss. If not, see <http://www.gnu.org/licenses/>.
 //
-// $Id: sparc_iss.c,v 1.4 2013/06/25 18:28:11 simon Exp $
+// $Id: sparc_iss.c,v 1.5 2016-10-18 05:53:31 simon Exp $
 // $Source: /home/simon/CVS/src/cpu/sparc/src/sparc_iss.c,v $
 //
 //=============================================================
 
+#if !defined(_WIN32) && !defined(_WIN64)
+#include <getopt.h>
+#else
+extern char* optarg;
+#endif
 #include "sparc_iss.h"
 
 int main(int argc, char **argv)
 {
-    extern char *optarg;
-
     char*  fname = "main.aout";
     int    PrintCount       = 0;
     int    Disassemble      = 0;

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ "$1" = "" ]
 then
@@ -15,10 +15,10 @@ fi
 
 name=$1
 
-if [ "$OSTYPE" = "cygwin" ]
+if [ "$OSTYPE" = "cygwin" -o  "$OSTYPE" = "linux" -o  "$OSTYPE" = "linux-gnu" ]
 then
-  sparc-elf-cpp trap_table.s | sparc-elf-as.exe -xarch=v8 -o trap_table.o
-  sparc-elf-cpp ${name}.s | sparc-elf-as.exe -xarch=v8 -W -o ${name}.o
+  sparc-elf-cpp trap_table.s | sparc-elf-as -xarch=v8 -o trap_table.o
+  sparc-elf-cpp ${name}.s | sparc-elf-as -xarch=v8 -W -o ${name}.o
   sparc-elf-gcc -c libsparc.c -o libsparc.o
   sparc-elf-ld -A v8 -e __trap_table -nostdlib \
                -Map ${name}.map \
