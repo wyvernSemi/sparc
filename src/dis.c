@@ -1,6 +1,6 @@
 //=============================================================
 //                                                                         
-// Copyright (c) 2004 Simon Southwell. All rights reserved.
+// Copyright (c) 2004 - 2024 Simon Southwell. All rights reserved.
 //                                                                         
 // Date: 13th October 2004
 //
@@ -15,9 +15,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//
-// $Id: dis.c,v 1.3 2016-10-18 05:52:44 simon Exp $
-// $Source: /home/simon/CVS/src/cpu/sparc/src/dis.c,v $
 //
 //=============================================================
 
@@ -158,7 +155,7 @@ static void disIfetch (const uint64 physaddr, uint32 * const inst)
     }
 
     if ((PA & ~ADDR_MASK) != 0) {
-        fprintf(stderr, "MAIN : Trying to read instructions out of range! PA=%x\n", PA);
+        fprintf(stderr, "MAIN : Trying to read instructions out of range! PA=%llx\n", PA);
         RegisterDump();
         exit(RUNTIME_ERROR);
     }

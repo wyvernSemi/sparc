@@ -67,7 +67,7 @@ main:
         or      %l0, %lo(.LTESTDATA-4), %l0
         mov     0, %l2
 
-        sth     %l1, [%l0+6]
+        sth     %l1, [%l0+4]
 
         ! Check result
         sethi   %hi(RESULT1), %l1
@@ -91,7 +91,7 @@ main:
         or      %l1, %lo(VALUE3), %l1
         sethi   %hi(.LTESTDATA), %l0
         or      %l0, %lo(.LTESTDATA), %l0
-        mov     3, %l4
+        mov     0, %l4
         mov     0, %l2
 
         stb     %l1, [%l0+%l4]
@@ -109,7 +109,7 @@ main:
         or      %l1, %lo(VALUE4), %l1
         sethi   %hi(.LTESTDATA), %l0
         or      %l0, %lo(.LTESTDATA), %l0
-        dec     %l4
+        inc     %l4
         mov     0, %l2
 
         stb     %l1, [%l0+%l4]
@@ -130,7 +130,7 @@ main:
         dec     %l4
         mov     0, %l2
 
-        stb     %l1, [%l0+1]
+        stb     %l1, [%l0+2]
 
         ! Check result
 
@@ -145,10 +145,9 @@ main:
         or      %l1, %lo(VALUE6), %l1
         sethi   %hi(.LTESTDATA), %l0
         or      %l0, %lo(.LTESTDATA), %l0
-        dec     %l4
         mov     0, %l2
 
-        stb     %l1, [%l0]
+        stb     %l1, [%l0+3]
 
         ! Check result
 

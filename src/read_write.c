@@ -1,6 +1,6 @@
 //=============================================================
 // 
-// Copyright (c) 2004 Simon Southwell
+// Copyright (c) 2004 - 2024 Simon Southwell. All rights reserved.
 //
 // Date: 13th October 2004
 //
@@ -18,9 +18,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with sparc_iss. If not, see <http://www.gnu.org/licenses/>.
-//
-// $Id: read_write.c,v 1.3 2013-06-29 08:57:39 simon Exp $
-// $Source: /home/simon/CVS/src/cpu/sparc/src/read_write.c,v $
 //
 //=============================================================
 
@@ -270,13 +267,13 @@ uint32 MemRead(const uint64 pa, const int bytes, const uint32 rd, const int sign
 
     switch (bytes) {
     case 1 :
-        offset = (uint32)(physaddr & 3) * 8;
+        offset = (uint32)(3 - (physaddr & LOBITS2)) * 8;
         value = ((value >> offset) & LOBITS8);
         value |= ((signext && (value & BIT7)) ? 0xffffff00 : 0);
         WriteRegAll(reg_no, value);
         break;
     case 2 : 
-        offset = (uint32)(physaddr & 2) * 8;
+        offset = (uint32)(2 - (physaddr & BIT1)) * 8;
         value = ((value >> offset) & LOBITS16);
         value |= ((signext && (value & BIT15)) ? 0xffff0000 : 0);
         WriteRegAll(reg_no, value);
@@ -318,13 +315,13 @@ void MemWrite(const uint64 pa, const int bytes, const uint32 rd)
 
         switch (bytes) {
         case 1 :
-            offset = (uint32)(physaddr & LOBITS2) * 8;
+            offset = (uint32)(3 - (physaddr & LOBITS2)) * 8;
             value = ((value & 0xff) << offset);
             mem_value = (mem_value & ~(0xff << offset)) | value;
             Memory[(physaddr & ~((uint64)3)) >> (uint64)2] = mem_value;
             break;
         case 2 : 
-            offset = (uint32)(physaddr & LOBITS2) * 8;
+            offset = (uint32)(2 - (physaddr & BIT1)) * 8;
             value = ((value & 0xffff) << offset);
             mem_value = (mem_value & ~(0xffff << offset)) | value;
             Memory[(physaddr & ~((uint64)3)) >> (uint64)2] = mem_value;

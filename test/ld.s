@@ -10,17 +10,20 @@
 #define BAD     0xbad
 
 #define RESULT1  0xAAAAAAAA
-#define RESULT2  0x0000BABE
-#define RESULT3  0x0000CAFE
+#define RESULT2  0x0000CAFE
+#define RESULT3  0x0000BABE
 #define RESULT4  0x0000FEBA
-#define RESULT5  0x00004321
-#define RESULT6  0xffff8765
-#define RESULT7  0x00000045
-#define RESULT8  0x00000093
-#define RESULT9  0x00000007
-#define RESULT10 0x00000091
-#define RESULT11 0xffffff93
-#define RESULT12 0xffffff91
+#define RESULT5  0xffff8765
+#define RESULT6  0x00004321
+
+#define RESULT7  0x00000091
+#define RESULT8  0x00000007
+#define RESULT9  0x00000093
+#define RESULT10 0x00000045
+
+#define RESULT11 0xffffff91
+#define RESULT12 0xffffff93
+
 #define RESULT13 0xcafebabe
 #define RESULT14 0x87654321
 #define RESULT15 0x91079345
@@ -201,14 +204,14 @@ main:
 
         !!!!!!! LDSB !!!!!!!
 
-        sethi   %hi(RESULT7), %l1
-        or      %l1,%lo(RESULT7), %l1
+        sethi   %hi(RESULT8), %l1
+        or      %l1,%lo(RESULT8), %l1
         sethi   %hi(.LTESTDATA3), %l0
         or      %l0, %lo(.LTESTDATA3), %l0
         mov     0, %l2
-        mov     1, %l4
+        mov     0, %l4
 
-        ldsb    [%l0], %l2
+        ldsb    [%l0+1], %l2
 
         cmp     %l1, %l2
         bne     .LFAIL
@@ -223,10 +226,10 @@ main:
         bne     .LFAIL
         nop
 
-        sethi   %hi(RESULT9), %l1
-        or      %l1, %lo(RESULT9), %l1
+        sethi   %hi(RESULT10), %l1
+        or      %l1, %lo(RESULT10), %l1
 
-        ldsb    [%l0+2], %l2
+        ldsb    [%l0+3], %l2
 
         cmp     %l1, %l2
         bne     .LFAIL

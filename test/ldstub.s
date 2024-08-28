@@ -33,7 +33,7 @@ main:
         sethi   %hi(.LTESTDATA), %l0
         or      %l0, %lo(.LTESTDATA), %l0
 
-        ldstub  [%l0+1], %l2
+        ldstub  [%l0+2], %l2
 
         cmp     %l1, %l2
         bne     .LFAIL
@@ -47,7 +47,7 @@ main:
         or      %l1, %lo(NUM3), %l1
         sethi   %hi(NUM4), %l3
         or      %l3, %lo(NUM4), %l3
-        mov     3, %l5
+        mov     0, %l5
 
         ldstub  [%l0+%l5], %l2
 
