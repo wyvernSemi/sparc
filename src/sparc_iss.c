@@ -99,7 +99,7 @@ int main(int argc, char **argv)
     inst_count = Run(fname, NumRunInst, UserBreakpoint, Disassemble, verbose, fp, &terminate_reason);
 
     if (PrintCount)
-        fprintf(fp, "Instruction count = %lld\n", inst_count);
+        fprintf(fp, "Instruction count = %lld\n", (long long)inst_count);
 
     fclose(fp);
 

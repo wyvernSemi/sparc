@@ -225,7 +225,7 @@ void Ifetch (const uint64 physaddr, uint32 * const inst)
     int do_local_access = 1;
 
     if ((PA & (uint64)3) != 0) {
-        fprintf(stderr, "Ifetch: Misaligned instruction fetch. PA=%llx\n", PA);
+        fprintf(stderr, "Ifetch: Misaligned instruction fetch. PA=%llx\n", (long long)PA);
         RegisterDump();
         terminate = 1;
         return;
@@ -237,7 +237,7 @@ void Ifetch (const uint64 physaddr, uint32 * const inst)
     if (do_local_access) {
 
         if ((PA & ~ADDR_MASK) != 0) {
-            fprintf(stderr, "Ifetch : Trying to read instructions out of range! PA=%llx\n", PA);
+            fprintf(stderr, "Ifetch : Trying to read instructions out of range! PA=%llx\n", (long long)PA);
             RegisterDump();
             terminate = 1;
             return;

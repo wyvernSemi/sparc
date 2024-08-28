@@ -155,7 +155,7 @@ static void disIfetch (const uint64 physaddr, uint32 * const inst)
     }
 
     if ((PA & ~ADDR_MASK) != 0) {
-        fprintf(stderr, "MAIN : Trying to read instructions out of range! PA=%llx\n", PA);
+        fprintf(stderr, "MAIN : Trying to read instructions out of range! PA=%llx\n", (long long)PA);
         RegisterDump();
         exit(RUNTIME_ERROR);
     }

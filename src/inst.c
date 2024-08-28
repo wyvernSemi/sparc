@@ -782,7 +782,7 @@ void STD (pDecode_t d)
     if (Verbose) {
         hold0 = ((uint64)d->value << (uint64)32);
         hold0 |= d->value1;
-        fprintf (ofp, "%08x std      %s, [%08x] = %llx\n", d->PC, DispRegStr(d->rd, rdbuf), d->ev, hold0);
+        fprintf (ofp, "%08x std      %s, [%08x] = %llx\n", d->PC, DispRegStr(d->rd, rdbuf), d->ev, (long long)hold0);
     }
     if (d->rd & LOBITS1) {
         Trap(d, SPARC_ILLEGAL_INSTRUCTION);

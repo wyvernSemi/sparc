@@ -32,12 +32,13 @@ TESTDIR=test
 ARCHOPT=
 
 COVOPTS=-coverage
+OPTFLAGS = -g
 
 #CC=cc
 #COPTS= -fast -xCC -I. -Isrc
 CC=gcc
-#COPTS=${ARCHOPT} -O3 -I. -Isrc
-COPTS=${COVOPTS} -g -I. -Isrc
+#COPTS=${ARCHOPT} -${OPTFLAGS} -I. -Isrc
+COPTS=${COVOPTS} ${OPTFLAGS} -I. -Isrc
 
 ##########################################################
 # Dependency definitions
