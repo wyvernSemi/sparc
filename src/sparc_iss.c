@@ -35,6 +35,7 @@ int main(int argc, char **argv)
 {
     char*  fname = "main.aout";
     int    PrintCount       = 0;
+    int    DumpRegs         = 0;
     int    Disassemble      = 0;
     int    terminate_reason = 0;
     uint32 UserBreakpoint   = NO_USER_BREAK;
@@ -50,7 +51,7 @@ int main(int argc, char **argv)
     fp = stdout;
 
     // Process the command line options 
-    while ((option = getopt(argc, argv, "f:vdn:b:o:c")) != EOF)
+    while ((option = getopt(argc, argv, "f:vdn:b:o:cr")) != EOF)
         switch(option) {
         case 'o':
             if ((fp = fopen(optarg, "wb")) == NULL) {
@@ -62,8 +63,10 @@ int main(int argc, char **argv)
             fname = optarg;
             break;
         case 'c':
-            PrintCount = 1;
+            PrintCount  = 1;
             break;
+        case 'r':
+            DumpRegs    = 1;
         case 'd':
             Disassemble = 1;
             break;
@@ -100,6 +103,9 @@ int main(int argc, char **argv)
 
     if (PrintCount)
         fprintf(fp, "Instruction count = %lld\n", (long long)inst_count);
+
+    if (DumpRegs)
+        RegisterDump();
 
     fclose(fp);
 

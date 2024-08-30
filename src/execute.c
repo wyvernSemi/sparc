@@ -19,9 +19,6 @@
 // You should have received a copy of the GNU General Public License
 // along with sparc_iss. If not, see <http://www.gnu.org/licenses/>.
 //
-// $Id: execute.c,v 1.3 2013-06-29 08:57:39 simon Exp $
-// $Source: /home/simon/CVS/src/cpu/sparc/src/execute.c,v $
-//
 //=============================================================
 
 #include <stdio.h>

@@ -40,22 +40,22 @@ main:
 
         mov     0, %g7
 
-        MOVW	(0x007fffff, %g2)
+        MOVW        (0x07ffffff, %g2)
 .LOOP:
 
-	mov	0x123, %l1
-	mov	0xaaa, %l0
-	xor	%l1, %l0, %l1
-	cmp	%l1, 0xb89
-	bne	.LFAIL
-	nop
+        mov        0x123, %l1
+        mov        0xaaa, %l0
+        xor        %l1, %l0, %l1
+        cmp        %l1, 0xb89
+        bne        .LFAIL
+        nop
 
         MOVW    (.LTESTDATA, %l0)
-	mov	1, %l1
-        ldub	[%l0+%l1], %l2
-	cmp	%l2, 0xaa
-	bne	.LFAIL
-	nop
+        mov        1, %l1
+        ldub        [%l0+%l1], %l2
+        cmp        %l2, 0xaa
+        bne        .LFAIL
+        nop
 
         MOVW    (NUM1HI, %l1)
         wr      %l1,%y
@@ -80,9 +80,9 @@ main:
         bne     .LFAIL
         nop
 
-        subcc	%g2, 1, %g2
-	bne	.LOOP
-	nop
+        subcc        %g2, 1, %g2
+        bne        .LOOP
+        nop
 
 .LPASS:
         sethi   %hi(GOOD), %g7

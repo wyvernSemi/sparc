@@ -16,9 +16,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// $Id: elf.h,v 1.2 2013/06/25 18:28:11 simon Exp $
-// $Source: /home/simon/CVS/src/cpu/sparc/src/elf.h,v $
-//
 //=============================================================
 
 #ifndef _ELF_H_

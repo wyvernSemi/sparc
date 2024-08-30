@@ -19,9 +19,6 @@
 // You should have received a copy of the GNU General Public License
 // along with sparc_iss. If not, see <http://www.gnu.org/licenses/>.
 //
-// $Id: sparc.h,v 1.3 2013-06-29 08:57:39 simon Exp $
-// $Source: /home/simon/CVS/src/cpu/sparc/src/sparc.h,v $
-//
 //=============================================================
 
 #ifndef _SPARC_H_

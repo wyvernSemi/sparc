@@ -19,9 +19,6 @@
 // You should have received a copy of the GNU General Public License
 // along with sparc_iss. If not, see <http://www.gnu.org/licenses/>.
 //
-// $Id: sparc_iss.h,v 1.1 2013/06/25 18:28:11 simon Exp $
-// $Source: /home/simon/CVS/src/cpu/sparc/src/sparc_iss.h,v $
-//
 //=============================================================
 
 #ifndef _SPARC_ISS_H_
@@ -82,7 +79,7 @@ extern uint64 Run (const char*  ElfFileName,
 
 extern void   register_mem_callback (p_memcallback_t cbFunc);
 extern uint32 GetPC        (void);
-
+extern void   RegisterDump (void);
 #endif
 
 
