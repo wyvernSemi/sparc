@@ -295,9 +295,10 @@ uint32 MemRead(const uint64 pa, const int bytes, const uint32 rd, const int sign
 //
 void MemWrite(const uint64 pa, const int bytes, const uint32 rd) 
 {
-    uint32 value, mem_value, offset, reg_no;
+    uint32 value, value_ext, mem_value, offset, reg_no;
     uint64 physaddr = pa;
     int do_local_access = 1;
+    int do_local_access_ext = 1;
 
     physaddr = (physaddr & (((uint64)1 << MEM_SIZE_BITS)-(uint64)1));
 
@@ -306,9 +307,17 @@ void MemWrite(const uint64 pa, const int bytes, const uint32 rd)
     else
         reg_no = GetRegBase(rd);
     value = ReadRegsAll(reg_no);
+    if (bytes == 8)
+        value_ext = ReadRegsAll(reg_no+1);
 
-    if (pMemCallback != NULL) 
-        do_local_access = pMemCallback(pa, bytes, &value, SPARC_MEM_CB_WR) == 0;
+    if (pMemCallback != NULL) {
+        if (bytes == 8) {
+            do_local_access = pMemCallback(pa, 4, &value, SPARC_MEM_CB_WR) == 0;
+            do_local_access_ext = pMemCallback(pa + 4, 4, &value_ext, SPARC_MEM_CB_WR) == 0;
+        } else {
+            do_local_access = pMemCallback(pa, bytes, &value, SPARC_MEM_CB_WR) == 0;
+	}
+    }
 
     if (do_local_access) {
         mem_value = Memory[(physaddr & ~((uint64)3)) >> (uint64)2];
@@ -327,14 +336,13 @@ void MemWrite(const uint64 pa, const int bytes, const uint32 rd)
             Memory[(physaddr & ~((uint64)3)) >> (uint64)2] = mem_value;
             break;
         case 4 :
-            Memory[(physaddr & ~((uint64)3)) >> (uint64)2] = value;
-            break;
         case 8 :
             Memory[(physaddr & ~((uint64)3)) >> (uint64)2] = value;
-            value = ReadRegsAll(reg_no+1);
-            Memory[((physaddr & ~((uint64)3)) >> (uint64)2)+(uint64)1] = value;
             break;
         }
+    }
+    if (bytes == 8 && do_local_access_ext) {
+        Memory[((physaddr & ~((uint64)3)) >> (uint64)2)+(uint64)1] = value_ext;
     }
 }
 
