@@ -51,7 +51,7 @@ void putc(int c, FILE *ofp)
 
 int getc(FILE *ifp)
 {
-    return;
+    return 0;
 }
 
 void BadTrap(void)
