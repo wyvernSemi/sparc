@@ -596,8 +596,8 @@ void MULSCC (pDecode_t d)
     cc = (d->PSR >> PSR_CC_CARRY) & LOBITS4;
 
 
-    x = d->ev;
-    y = (Y & 1) ? (d->rs1_value >> 1) | ((((cc >> CC_OVERFLOW) ^ (cc >> CC_NEGATIVE)) &1) << 31) : 0;
+    x = (d->rs1_value >> 1) | ((((cc >> CC_OVERFLOW) ^ (cc >> CC_NEGATIVE)) &1) << 31);
+    y = (Y & 1) ? d->ev : 0;
 
     z = x + y;
 
