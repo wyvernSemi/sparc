@@ -19,18 +19,10 @@ if [ "$OSTYPE" = "cygwin" -o  "$OSTYPE" = "linux" -o  "$OSTYPE" = "linux-gnu"  -
 then
   if [ "x$CROSS_COMPILE" = "x" ]
   then
-    if [ "$OSTYPE" = "linux-gnu" ]
-    then
-      CPPEXE=sparc-elf-cpp.exe
-      ASEXE=sparc-elf-as.exe
-      GCCEXE=sparc-elf-gcc.exe
-      LDEXE=sparc-elf-ld.exe
-    else
       CPPEXE=sparc-elf-cpp
       ASEXE=sparc-elf-as
       GCCEXE=sparc-elf-gcc
       LDEXE=sparc-elf-ld
-    fi
   else
     CPPEXE="$CROSS_COMPILE"cpp
     ASEXE="$CROSS_COMPILE"as
