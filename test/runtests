@@ -17,7 +17,7 @@ for testname in $testlist
 do
     if [ "$1" != "nc" ] 
     then
-        compile $testname nowarn
+        sh compile $testname nowarn
     fi
 
     if ../sparc_iss -f ${testname}.aout

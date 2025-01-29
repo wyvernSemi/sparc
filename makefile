@@ -92,7 +92,7 @@ coverage:
 
 test: run_test
 run_test: $(TARGET)
-	@cd test; ./runtests
+	@cd test; sh runtests
 
 ##########################################################
 # Clean up rules
