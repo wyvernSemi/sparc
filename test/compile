@@ -17,22 +17,30 @@ name=$1
 
 if [ "$OSTYPE" = "cygwin" -o  "$OSTYPE" = "linux" -o  "$OSTYPE" = "linux-gnu"  -o "$OSTYPE" = "msys" ]
 then
-  if [ "$OSTYPE" = "linux-gnu" ]
+  if [ "x$CROSS_COMPILE" = "x" ]
   then
-    CPPEXE=sparc-elf-cpp.exe
-    ASEXE=sparc-elf-as.exe
-    GCCEXE=sparc-elf-gcc.exe
-    LDEXE=sparc-elf-ld.exe
+    if [ "$OSTYPE" = "linux-gnu" ]
+    then
+      CPPEXE=sparc-elf-cpp.exe
+      ASEXE=sparc-elf-as.exe
+      GCCEXE=sparc-elf-gcc.exe
+      LDEXE=sparc-elf-ld.exe
+    else
+      CPPEXE=sparc-elf-cpp
+      ASEXE=sparc-elf-as
+      GCCEXE=sparc-elf-gcc
+      LDEXE=sparc-elf-ld
+    fi
   else
-    CPPEXE=sparc-elf-cpp
-    ASEXE=sparc-elf-as
-    GCCEXE=sparc-elf-gcc
-    LDEXE=sparc-elf-ld
+    CPPEXE="$CROSS_COMPILE"cpp
+    ASEXE="$CROSS_COMPILE"as
+    GCCEXE="$CROSS_COMPILE"gcc
+    LDEXE="$CROSS_COMPILE"ld
   fi
 
   $CPPEXE trap_table.s | $ASEXE -xarch=v8 -o trap_table.o
   $CPPEXE ${name}.s    | $ASEXE -xarch=v8 -W -o ${name}.o
-  $GCCEXE -c libsparc.c -o libsparc.o
+  $GCCEXE -fno-builtin -c libsparc.c -o libsparc.o
   $LDEXE  -A v8 -e __trap_table -nostdlib \
           -Map ${name}.map \
           --noinhibit-exec \
