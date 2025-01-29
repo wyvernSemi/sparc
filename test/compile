@@ -32,7 +32,7 @@ then
 
   $CPPEXE trap_table.s | $ASEXE -xarch=v8 -o trap_table.o
   $CPPEXE ${name}.s    | $ASEXE -xarch=v8 -W -o ${name}.o
-  $GCCEXE -c libsparc.c -o libsparc.o
+  $GCCEXE -fno-builtin -c libsparc.c -o libsparc.o
   $LDEXE  -A v8 -e __trap_table -nostdlib \
           -Map ${name}.map \
           --noinhibit-exec \
