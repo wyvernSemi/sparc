@@ -99,11 +99,25 @@ main:
         bne     .LFAIL
         nop
 
+        MOVW    (0x00002004, %l1)
+        MOVW    (0x00012345, %l2)
+        MOVW    (0x246d2d14, %l3)
+        MOVW    (0x0000fffe, %l4)
+        MOVW    (0x00001002, %g1)
+        SetCC   (0xa, %l5, %l6, %l7)
+        wr      %l4, %y
+
+        mulscc  %l1, %l2, %l5
+
+        cmp     %g1, %l5
+        bne     .LFAIL
+        nop
+
         MOVW    (0x00012345, %l1)
         MOVW    (0x00002004, %l2)
         MOVW    (0x246d2d14, %l3)
         MOVW    (0x0000fffe, %l4)
-        MOVW    (0x00002004, %g1)
+        MOVW    (0x000091a2, %g1)
         SetCC   (0xa, %l5, %l6, %l7)
         wr      %l4, %y
 
